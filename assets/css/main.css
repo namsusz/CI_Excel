@@ -1,0 +1,35 @@
+.text__container {
+	background-color: #f5f5f5;
+	border-radius: 1px solid #eeeeee;
+	margin: 0 auto;
+	margin-top: 200px;
+	height: 520px;
+	width: 300px;
+	padding: 15px;
+	box-shadow: 0 13px 20px -5px rgba(50, 50, 93, 0.25),
+		0 8px 16px -8px rgba(0, 0, 0, 0.3), 0 -6px 16px -6px rgba(0, 0, 0, 0.025);
+}
+
+.text__box label {
+	font-size: 20px;
+}
+
+.phone__input {
+	margin-bottom: 10px;
+}
+
+.phone__select {
+	margin-top: 10px;
+}
+
+.upload__box {
+	margin-bottom: 0;
+}
+
+.form-control-file {
+	width: 250px;
+}
+
+.btn {
+	margin-top: 10px;
+}

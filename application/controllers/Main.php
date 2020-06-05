@@ -1,13 +1,29 @@
 <?php
 
-class Excel extends CI_Controller
+class Main extends CI_Controller
 {
+    function __construct()
+    {
+        parent::__construct(); //초기화
+    }
+
+    public function _remap($method) //헤더 푸터 로드
+    {
+        $this->load->view('head');
+ 
+        if (method_exists($this, $method)) {
+            $this -> {"{$method}"}();
+        }
+ 
+        $this->load->view('footer');
+    }
+
 	public function index()
 	{
-		$this->load->view('excel_upload');
+		$this->load->view('main');
     }
     
-    public function excelRead()
+    public function read()
     {
         require_once "./application/static/lib/PHPExcel-1.8/Classes/PHPExcel.php";
         require_once "./application/static/lib/PHPExcel-1.8/Classes/PHPExcel/IOFactory.php";
@@ -22,7 +38,7 @@ class Excel extends CI_Controller
 
         if ($filetype != "xls" && $filetype != "xlsx")
         {
-            print "<script language=javascript> alert('엑셀 파일만 업로드 해주세요'); location.replace('/excel/Excel'); </script>";
+            print "<script language=javascript> alert('엑셀 파일만 업로드 해주세요'); location.replace('/Excel/main'); </script>";
         }
         
         move_uploaded_file($_FILES["excelFile"]["tmp_name"], $filepath);
@@ -35,7 +51,7 @@ class Excel extends CI_Controller
         {
             // 업로드한 PHP 파일을 읽어온다.
             $objReader = PHPExcel_IOFactory :: createReaderForFile($filepath);
-            $objReader->setReadDataOnly(true); //일기전용
+            $objReader->setReadDataOnly(true); //읽기전용
         	$objPHPExcel =  $objReader->load($filepath);
             $sheetsCount = $objPHPExcel -> getSheetCount();
             
@@ -48,16 +64,12 @@ class Excel extends CI_Controller
                 $highestColumn = $sheet -> getHighestColumn();	// 마지막 컬럼
         
                 // 한줄읽기
-                for($row = 1; $row <= $highestRow; $row++)
+                for($row = 2; $row <= $highestRow; $row++)
                 {
-                  // $rowData가 한줄의 데이터를 셀별로 배열처리 된다.
-                //   $rowData = $sheet -> rangeToArray("A" . $row . ":" . $highestColumn . $row, NULL, TRUE, FALSE);
                     $name = $sheet->getCell('A'.$row)->getValue();
                     $phone = $sheet->getCell('B'.$row)->getValue();
-            
-                  // $rowData에 들어가는 값은 계속 초기화 되기때문에 값을 담을 새로운 배열을 선안하고 담는다.
-                  $nameData[$row] = $name;
-                  $phoneData[$row] = $phone;
+                    $nameData[$row] = $name;
+                    $phoneData[$row] = "0" .  $phone;
                 }
         	}
         
@@ -67,8 +79,13 @@ class Excel extends CI_Controller
 
         //array_unique(배열명) 배열 중복제거
         //array_filter(배열명) 배열 공백제거
-        //array_values(배열명) 배열 정리
+        //array_values(배열명) 배열 정리0
         $nameData = array_values(array_filter(array_unique($nameData)));
         $phoneData = array_values(array_filter(array_unique($phoneData)));
+        $phoneCount = count($phoneData);
+
+        // var_dump($phoneData);
+        //implode(",", $phoneData)
+        $this->load->view('main', array('name' => $nameData, 'phone' => $phoneData, 'PC' => $phoneCount));
     }
 }
