@@ -15,7 +15,7 @@
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 
     <!-- css -->
-    <link rel="stylesheet" href="/Excel/assets/css/main.css">
+    <link rel="stylesheet" href="/Excel/assets/css/main.css?ver=1">
 
 	<title>문자 전송</title>
 </head>

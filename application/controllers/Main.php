@@ -88,4 +88,11 @@ class Main extends CI_Controller
         //implode(",", $phoneData)
         $this->load->view('main', array('name' => $nameData, 'phone' => $phoneData, 'PC' => $phoneCount));
     }
+
+    public function send()
+    {
+        echo $_POST['phoneNum']. "<br />";
+        echo $_POST['text']. "<br />";
+        echo $_POST['NameArray']. "<br />";
+    }
 }

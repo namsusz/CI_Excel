@@ -26,8 +26,8 @@
 	margin-bottom: 0;
 }
 
-.form-control-file {
-	width: 250px;
+.file__upload {
+	margin-top: 10px;
 }
 
 .btn {
