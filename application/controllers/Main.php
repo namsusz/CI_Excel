@@ -38,7 +38,7 @@ class Main extends CI_Controller
 
         if ($filetype != "xls" && $filetype != "xlsx")
         {
-            print "<script language=javascript> alert('엑셀 파일만 업로드 해주세요'); location.replace('/Excel/main'); </script>";
+            getAlert('엑셀 파일만 업로드 해주세요', '/Excel/main');
         }
         
         move_uploaded_file($_FILES["excelFile"]["tmp_name"], $filepath);
@@ -69,19 +69,18 @@ class Main extends CI_Controller
                     $name = $sheet->getCell('A'.$row)->getValue();
                     $phone = $sheet->getCell('B'.$row)->getValue();
                     $nameData[$row] = $name;
-                    $phoneData[$row] = "0" .  $phone;
+                    $phoneData[$row] = $phone; //엑셀 파일 하이픈 맨앞0 따라서 바꿔야함
                 }
         	}
-        
         } catch(exception $e) {
         	echo $e;
         }
 
         //array_unique(배열명) 배열 중복제거
         //array_filter(배열명) 배열 공백제거
-        //array_values(배열명) 배열 정리0
+        //array_values(배열명) 배열 정리
         $nameData = array_values(array_filter(array_unique($nameData)));
-        $phoneData = array_values(array_filter(array_unique($phoneData)));
+        $phoneData = str_replace('-', '', array_values(array_filter(array_unique($phoneData))));
         $phoneCount = count($phoneData);
 
         // var_dump($phoneData);
@@ -91,8 +90,35 @@ class Main extends CI_Controller
 
     public function send()
     {
-        echo $_POST['phoneNum']. "<br />";
-        echo $_POST['text']. "<br />";
-        echo $_POST['NameArray']. "<br />";
+        $phone = $_POST['phoneNum']; //01011111111,01022222222 string
+        $text = nl2br($_POST['text']); //줄바꿈 테그삽입
+        $name = json_decode($_POST['NameArray']);
+        $select = $_POST['phoneList'];
+        $num = (int)substr($select, 1);
+
+        if ($select == "T")
+        {
+            for ($i=0; $i<count($name); $i++)
+            {
+                $t = str_replace("#", $name[$i], $text);
+                echo $t . "<br />";
+            }
+        }
+        else if (substr($select, 0, 1) == "S" && $num+49 > $_POST['phoneCount'])
+        {
+            for ($i=$num-1; $i<$_POST['phoneCount']; $i++)
+            {
+                $t = str_replace("#", $name[$i], $text);
+                echo $t . "<br />";
+            }
+        }
+        else if (substr($select, 0, 1) == "S")
+        {
+            for ($i=$num-1; $i<$num+49; $i++)
+            {
+                $t = str_replace("#", $name[$i], $text);
+                echo $t . "<br />";
+            }
+        }
     }
 }

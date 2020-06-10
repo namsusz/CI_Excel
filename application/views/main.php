@@ -3,16 +3,17 @@
 		<span>
 			<label>문자보내기</label>
 			<input class="form-control phone__input" type="text" name="phoneNum" id="phoneNum" placeholder="전화번호" value="">
+			<input class="form-control phone__input" type="text" name="phoneCount" id="phoneCount" placeholder="" value="<?= !empty($PC) ? $PC : "" ?>" style="display:none">
 			<textarea class="form-control text__input" name="text" id="text" placeholder="문자내용" value="" cols="30" rows="10"></textarea>
-			<textarea class="form-control text__input" name="" id="PhoneArray" placeholder="" value="" style="display:none"><?= !empty($phone) ? json_encode($phone) : "" ?></textarea>
-			<textarea class="form-control text__input" name="" id="NameArray" placeholder="" value="" style="display:none"><?= !empty($name) ? json_encode($name) : "" ?></textarea>
-			<select id="phoneList" name="" class="custom-select phone__select" onchange="getPhone();">
+			<textarea class="form-control text__input" name="PhoneArray" id="PhoneArray" placeholder="" value="" style="display:none"><?= !empty($phone) ? json_encode($phone) : "" ?></textarea>
+			<textarea class="form-control text__input" name="NameArray" id="NameArray" placeholder="" value="" style="display:none"><?= !empty($name) ? json_encode($name) : "" ?></textarea>
+			<select id="phoneList" name="phoneList" class="custom-select phone__select" onchange="getPhone(<?= $PC ?>);">
 				<option value="">발신번호</option>
 				<?php
 					if (!empty($PC) && $PC <= 50)
 					{
 				?>
-				<option value="T1"><?= "1번 ~ " . $PC . "번" ?></option>
+				<option value="T"><?= "1번 ~ " . $PC . "번" ?></option>
 				<?php
 					}
 					else if (!empty($PC) && $PC > 50)
@@ -22,7 +23,7 @@
 							$i+=1;
 							$j=$i+49;
 				?>
-				<option value="S<?= $i ?>"><?= $i . "번 ~ " . $j . "번" ?></option>
+				<option value="S<?= $i ?>"><?= $i . "번 ~ " . ($j>$PC ? $PC : $j) . "번" ?></option>
 				<?php
 						}
 					}
