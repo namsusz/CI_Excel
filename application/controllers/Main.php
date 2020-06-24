@@ -43,7 +43,7 @@ class Main extends CI_Controller
         
         move_uploaded_file($_FILES["excelFile"]["tmp_name"], $filepath);
 
-        // 엑셀 데이터를 담을 배열을 선언한다.
+        // 엑셀 데이터를 담을 배열을 선언
         $nameData = array();
         $phoneData = array();
 
@@ -53,15 +53,15 @@ class Main extends CI_Controller
             $objReader = PHPExcel_IOFactory :: createReaderForFile($filepath);
             $objReader->setReadDataOnly(true); //읽기전용
         	$objPHPExcel =  $objReader->load($filepath);
-            $sheetsCount = $objPHPExcel -> getSheetCount();
+            $sheetsCount = $objPHPExcel->getSheetCount();
             
         	// 시트Sheet별로 읽기
             for ($i = 0; $i < $sheetsCount; $i++)
             {
-                $objPHPExcel -> setActiveSheetIndex($i);
-                $sheet = $objPHPExcel -> getActiveSheet();
-                $highestRow = $sheet -> getHighestRow();   		// 마지막 행
-                $highestColumn = $sheet -> getHighestColumn();	// 마지막 컬럼
+                $objPHPExcel->setActiveSheetIndex($i);
+                $sheet = $objPHPExcel->getActiveSheet();
+                $highestRow = $sheet->getHighestRow();   		// 마지막 행
+                $highestColumn = $sheet ->getHighestColumn();	// 마지막 컬럼
         
                 // 한줄읽기
                 for($row = 2; $row <= $highestRow; $row++)
@@ -83,7 +83,6 @@ class Main extends CI_Controller
         $phoneData = str_replace('-', '', array_values(array_filter(array_unique($phoneData))));
         $phoneCount = count($phoneData);
 
-        // var_dump($phoneData);
         //implode(",", $phoneData)
         $this->load->view('main', array('name' => $nameData, 'phone' => $phoneData, 'PC' => $phoneCount));
     }
@@ -91,34 +90,41 @@ class Main extends CI_Controller
     public function send()
     {
         $phone = $_POST['phoneNum']; //01011111111,01022222222 string
-        $text = nl2br($_POST['text']); //줄바꿈 테그삽입
+        $msg = nl2br($_POST['msg']); //줄바꿈 테그삽입
         $name = json_decode($_POST['NameArray']);
         $select = $_POST['phoneList'];
-        $num = (int)substr($select, 1);
+        // $num = (int)substr($select, 1);
 
-        if ($select == "T")
-        {
-            for ($i=0; $i<count($name); $i++)
-            {
-                $t = str_replace("#", $name[$i], $text);
-                echo $t . "<br />";
-            }
-        }
-        else if (substr($select, 0, 1) == "S" && $num+49 > $_POST['phoneCount'])
-        {
-            for ($i=$num-1; $i<$_POST['phoneCount']; $i++)
-            {
-                $t = str_replace("#", $name[$i], $text);
-                echo $t . "<br />";
-            }
-        }
-        else if (substr($select, 0, 1) == "S")
-        {
-            for ($i=$num-1; $i<$num+49; $i++)
-            {
-                $t = str_replace("#", $name[$i], $text);
-                echo $t . "<br />";
-            }
-        }
+
+        $sms['receiver'] = $phone; //받는사람
+        $sms['msg'] = str_replace("#", $name[0], $msg); //문자내용
+        $sms['reservation'] = ""; //예약발송
+
+        aligo($sms);
+
+        // if ($select == "T")
+        // {
+        //     for ($i=0; $i<count($name); $i++)
+        //     {
+        //         $t = str_replace("#", $name[$i], $text);
+        //         echo $t . "<br />";
+        //     }
+        // }
+        // else if (substr($select, 0, 1) == "S" && $num+49 > $_POST['phoneCount'])
+        // {
+        //     for ($i=$num-1; $i<$_POST['phoneCount']; $i++)
+        //     {
+        //         $t = str_replace("#", $name[$i], $text);
+        //         echo $t . "<br />";
+        //     }
+        // }
+        // else if (substr($select, 0, 1) == "S")
+        // {
+        //     for ($i=$num-1; $i<$num+49; $i++)
+        //     {
+        //         $t = str_replace("#", $name[$i], $text);
+        //         echo $t . "<br />";
+        //     }
+        // }
     }
 }

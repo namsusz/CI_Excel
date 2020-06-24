@@ -4,7 +4,7 @@
 			<label>문자보내기</label>
 			<input class="form-control phone__input" type="text" name="phoneNum" id="phoneNum" placeholder="전화번호" value="">
 			<input class="form-control phone__input" type="text" name="phoneCount" id="phoneCount" placeholder="" value="<?= !empty($PC) ? $PC : "" ?>" style="display:none">
-			<textarea class="form-control text__input" name="text" id="text" placeholder="문자내용" value="" cols="30" rows="10"></textarea>
+			<textarea class="form-control text__input" name="msg" id="msg" placeholder="문자내용" value="" cols="30" rows="10"></textarea>
 			<textarea class="form-control text__input" name="PhoneArray" id="PhoneArray" placeholder="" value="" style="display:none"><?= !empty($phone) ? json_encode($phone) : "" ?></textarea>
 			<textarea class="form-control text__input" name="NameArray" id="NameArray" placeholder="" value="" style="display:none"><?= !empty($name) ? json_encode($name) : "" ?></textarea>
 			<select id="phoneList" name="phoneList" class="custom-select phone__select" onchange="getPhone(<?= $PC ?>);">
